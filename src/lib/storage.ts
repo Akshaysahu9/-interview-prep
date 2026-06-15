@@ -1,6 +1,6 @@
 import type { InterviewSession } from "./types";
 
-const STORAGE_KEY = "ai-mock-interview-sessions";
+const STORAGE_KEY = "roundone-sessions";
 
 export function getSessions(): InterviewSession[] {
   if (typeof window === "undefined") return [];

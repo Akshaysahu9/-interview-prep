@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { getPrisma } from "@/lib/db";
 import { analyzeResume } from "@/lib/resume-analysis";
 import { generateId } from "@/lib/utils";
 
@@ -22,17 +22,20 @@ export async function POST(request: Request) {
     );
 
     const id = generateId();
-    try {
-      await prisma.resumeAnalysis.create({
+    const db = getPrisma();
+    if (db) {
+      try {
+        await db.resumeAnalysis.create({
         data: {
           id,
           candidateName: body.candidateName.trim(),
           resumeText: body.resumeText.slice(0, 10000),
           result: JSON.stringify(result),
         },
-      });
-    } catch {
-      // DB optional until prisma db push
+        });
+      } catch {
+        /* ignore */
+      }
     }
 
     return NextResponse.json({ id, result });

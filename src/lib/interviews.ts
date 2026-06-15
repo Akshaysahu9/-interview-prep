@@ -1,4 +1,4 @@
-import { prisma } from "./db";
+import { getPrisma } from "./db";
 import type { InterviewSession } from "./types";
 
 function rowToSession(r: {
@@ -42,8 +42,11 @@ function rowToSession(r: {
 }
 
 export async function saveInterview(session: InterviewSession) {
+  const db = getPrisma();
+  if (!db) return;
+
   try {
-    await prisma.interview.upsert({
+    await db.interview.upsert({
       where: { id: session.id },
       create: {
         id: session.id,
@@ -79,8 +82,11 @@ export async function saveInterview(session: InterviewSession) {
 }
 
 export async function fetchInterviews(name?: string): Promise<InterviewSession[]> {
+  const db = getPrisma();
+  if (!db) return [];
+
   try {
-    const rows = await prisma.interview.findMany({
+    const rows = await db.interview.findMany({
       where: name ? { candidateName: { contains: name } } : undefined,
       orderBy: { createdAt: "desc" },
       take: 50,
