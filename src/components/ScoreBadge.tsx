@@ -6,16 +6,16 @@ interface ScoreBadgeProps {
 }
 
 function scoreColor(score: number): string {
-  if (score >= 80) return "#22c55e";
-  if (score >= 65) return "#eab308";
-  return "#f97316";
+  if (score >= 80) return "#059669";
+  if (score >= 65) return "#d97706";
+  return "#dc2626";
 }
 
 export function ScoreBadge({ score, size = "sm" }: ScoreBadgeProps) {
-  const dim = size === "lg" ? "h-28 w-28 text-3xl" : "h-12 w-12 text-sm";
+  const dim = size === "lg" ? "h-24 w-24 text-2xl" : "h-11 w-11 text-xs";
   return (
     <div
-      className={`score-ring flex items-center justify-center rounded-full font-bold text-white ${dim}`}
+      className={`score-ring flex items-center justify-center rounded-full font-semibold text-zinc-900 ${dim}`}
       style={
         {
           "--score": score,
@@ -23,7 +23,7 @@ export function ScoreBadge({ score, size = "sm" }: ScoreBadgeProps) {
         } as CSSProperties
       }
     >
-      <span className="flex h-[85%] w-[85%] items-center justify-center rounded-full bg-slate-900">
+      <span className="flex h-[88%] w-[88%] items-center justify-center rounded-full bg-white text-zinc-900">
         {score}
       </span>
     </div>

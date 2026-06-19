@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { TrendingUp } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { ProgressChart } from "@/components/ProgressChart";
 import { getSessions } from "@/lib/storage";
 import type { InterviewSession } from "@/lib/types";
@@ -66,54 +66,65 @@ export default function AnalyticsPage() {
   );
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
-      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <span className="flex items-center gap-2 text-sm text-indigo-400">
-            <TrendingUp className="h-4 w-4" />
-            Your improvement over time
-          </span>
-          <h1 className="mt-1 text-3xl font-bold text-white">Progress</h1>
+    <div>
+      <div className="page-header">
+        <div className="page-header-inner flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="section-label mb-2">Analytics</p>
+            <h1 className="text-2xl font-semibold text-zinc-900">Progress</h1>
+            <p className="mt-1 text-sm text-zinc-500">
+              Track scores and improvement over time
+            </p>
+          </div>
+          <input
+            className="input-field max-w-xs"
+            placeholder="Filter by name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
         </div>
-        <input
-          className="input-field max-w-xs"
-          placeholder="Filter by name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
       </div>
 
-      <div className="mb-8 grid gap-4 sm:grid-cols-3">
-        <StatCard label="Interviews done" value={String(filtered.length)} />
-        <StatCard label="Average score" value={filtered.length ? `${avg}%` : "—"} />
-        <StatCard label="Best score" value={filtered.length ? `${best}%` : "—"} />
-      </div>
+      <div className="page-body">
+        <div className="mx-auto max-w-3xl space-y-6">
+          <div className="grid gap-4 sm:grid-cols-3">
+            <StatCard label="Interviews done" value={String(filtered.length)} />
+            <StatCard
+              label="Average score"
+              value={filtered.length ? `${avg}%` : "—"}
+            />
+            <StatCard label="Best score" value={filtered.length ? `${best}%` : "—"} />
+          </div>
 
-      <div className="glass mb-8 rounded-2xl p-6">
-        <h2 className="mb-6 font-semibold text-white">Score trend (recent)</h2>
-        <ProgressChart scores={scores} />
-      </div>
+          <div className="card p-6">
+            <h2 className="mb-6 text-sm font-semibold text-zinc-900">
+              Score trend (recent)
+            </h2>
+            <ProgressChart scores={scores} />
+          </div>
 
-      {Object.keys(byRole).length > 0 && (
-        <div className="glass mb-8 rounded-2xl p-6">
-          <h2 className="mb-4 font-semibold text-white">Practice by role</h2>
-          <div className="flex flex-wrap gap-3">
-            {Object.entries(byRole).map(([role, count]) => (
-              <span
-                key={role}
-                className="rounded-full bg-white/5 px-4 py-2 text-sm text-slate-300"
-              >
-                {role}: <strong className="text-white">{count}</strong>
-              </span>
-            ))}
+          {Object.keys(byRole).length > 0 && (
+            <div className="card p-6">
+              <h2 className="mb-4 text-sm font-semibold text-zinc-900">
+                Practice by role
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {Object.entries(byRole).map(([role, count]) => (
+                  <span key={role} className="badge badge-neutral">
+                    {role}: <strong className="text-zinc-900">{count}</strong>
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="pt-2">
+            <Link href="/interview" className="btn-accent">
+              Take another mock interview
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </div>
-      )}
-
-      <div className="text-center">
-        <Link href="/interview" className="btn-primary">
-          Take another mock interview
-        </Link>
       </div>
     </div>
   );
@@ -121,9 +132,9 @@ export default function AnalyticsPage() {
 
 function StatCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="glass rounded-2xl p-5 text-center">
-      <p className="text-2xl font-bold text-white">{value}</p>
-      <p className="mt-1 text-sm text-slate-400">{label}</p>
+    <div className="card p-5">
+      <p className="text-2xl font-semibold tabular-nums text-zinc-900">{value}</p>
+      <p className="mt-0.5 text-xs text-zinc-400">{label}</p>
     </div>
   );
 }

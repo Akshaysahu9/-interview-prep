@@ -31,96 +31,116 @@ export default function DsaPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
-      <h1 className="mb-2 text-3xl font-bold text-white">Coding practice</h1>
-      <p className="mb-8 text-slate-400">
-        Work through common interview problems. Write your approach and solution, then get
-        structured feedback before your next round.
-      </p>
-
-      <div className="mb-4 flex flex-wrap gap-2">
-        {DSA_PROBLEMS.map((p, i) => (
-          <button
-            key={p.id}
-            type="button"
-            onClick={() => {
-              setActive(i);
-              setCode("");
-              setScore(null);
-              setFeedback("");
-            }}
-            className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
-              active === i
-                ? "bg-indigo-600 text-white"
-                : "bg-white/5 text-slate-400 hover:bg-white/10"
-            }`}
-          >
-            {p.title}
-          </button>
-        ))}
+    <div>
+      <div className="page-header">
+        <div className="page-header-inner">
+          <p className="section-label mb-2">Coding</p>
+          <h1 className="text-2xl font-semibold text-zinc-900">Coding practice</h1>
+          <p className="mt-1 text-sm text-zinc-500">
+            Work through common interview problems and get structured feedback on your
+            approach.
+          </p>
+        </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <div className="glass rounded-2xl p-6">
-          <div className="mb-3 flex items-center gap-2">
-            <span
-              className={`rounded-full px-2 py-0.5 text-xs font-bold ${
-                problem.difficulty === "Easy"
-                  ? "bg-green-500/20 text-green-400"
-                  : "bg-amber-500/20 text-amber-400"
+      <div className="page-body">
+        <div className="mb-5 flex flex-wrap gap-1.5">
+          {DSA_PROBLEMS.map((p, i) => (
+            <button
+              key={p.id}
+              type="button"
+              onClick={() => {
+                setActive(i);
+                setCode("");
+                setScore(null);
+                setFeedback("");
+              }}
+              className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                active === i
+                  ? "bg-zinc-900 text-white"
+                  : "border border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50"
               }`}
             >
-              {problem.difficulty}
-            </span>
-            {problem.topics.map((t) => (
-              <span key={t} className="text-xs text-slate-500">
-                {t}
-              </span>
-            ))}
-          </div>
-          <p className="mb-4 text-slate-200">{problem.description}</p>
-          <h3 className="mb-2 text-sm font-semibold text-slate-400">Examples</h3>
-          <ul className="mb-4 space-y-1 text-sm text-slate-400">
-            {problem.examples.map((ex) => (
-              <li key={ex} className="font-mono">
-                {ex}
-              </li>
-            ))}
-          </ul>
-          <h3 className="mb-2 text-sm font-semibold text-slate-400">Hints</h3>
-          <ul className="space-y-1 text-sm text-indigo-300/80">
-            {problem.hints.map((h) => (
-              <li key={h}>• {h}</li>
-            ))}
-          </ul>
+              {p.title}
+            </button>
+          ))}
         </div>
 
-        <div className="glass rounded-2xl p-6">
-          <label className="label flex items-center gap-2">
-            <Code2 className="h-4 w-4" />
-            Your solution (JavaScript / pseudocode)
-          </label>
-          <textarea
-            rows={14}
-            className="input-field mb-4 font-mono text-sm"
-            placeholder="// Brute force → optimize → state complexity"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-          />
-          <button
-            type="button"
-            className="btn-primary w-full"
-            onClick={submit}
-            disabled={loading || code.trim().length < 20}
-          >
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Submit for feedback"}
-          </button>
-          {score !== null && (
-            <div className="mt-4 rounded-xl border border-indigo-500/30 bg-indigo-500/10 p-4">
-              <p className="text-lg font-bold text-white">Score: {score}/100</p>
-              <p className="mt-1 text-sm text-slate-300">{feedback}</p>
+        <div className="grid gap-5 lg:grid-cols-2">
+          <div className="card p-6">
+            <div className="mb-4 flex flex-wrap items-center gap-2">
+              <span
+                className={`badge ${
+                  problem.difficulty === "Easy" ? "badge-success" : "badge-warning"
+                }`}
+              >
+                {problem.difficulty}
+              </span>
+              {problem.topics.map((t) => (
+                <span key={t} className="text-xs text-zinc-400">
+                  {t}
+                </span>
+              ))}
             </div>
-          )}
+            <p className="mb-5 text-sm leading-relaxed text-zinc-700">
+              {problem.description}
+            </p>
+            <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-400">
+              Examples
+            </h3>
+            <ul className="mb-5 space-y-1">
+              {problem.examples.map((ex) => (
+                <li key={ex} className="font-mono text-xs text-zinc-600">
+                  {ex}
+                </li>
+              ))}
+            </ul>
+            <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-400">
+              Hints
+            </h3>
+            <ul className="space-y-1">
+              {problem.hints.map((h) => (
+                <li key={h} className="text-sm text-zinc-600">
+                  {h}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="card p-6">
+            <label className="label flex items-center gap-2">
+              <Code2 className="h-4 w-4 text-zinc-400" />
+              Your solution
+            </label>
+            <p className="mb-3 text-xs text-zinc-400">JavaScript or pseudocode</p>
+            <textarea
+              rows={14}
+              className="input-field mb-4 font-mono text-sm"
+              placeholder="// Brute force → optimize → state complexity"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+            />
+            <button
+              type="button"
+              className="btn-accent w-full"
+              onClick={submit}
+              disabled={loading || code.trim().length < 20}
+            >
+              {loading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                "Submit for feedback"
+              )}
+            </button>
+            {score !== null && (
+              <div className="mt-4 rounded-md border border-teal-200 bg-teal-50 p-4">
+                <p className="text-sm font-semibold tabular-nums text-zinc-900">
+                  Score: {score}/100
+                </p>
+                <p className="mt-1 text-sm text-zinc-600">{feedback}</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

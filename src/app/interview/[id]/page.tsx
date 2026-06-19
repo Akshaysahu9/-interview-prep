@@ -118,9 +118,9 @@ export default function InterviewSessionPage() {
 
   if (session === null) {
     return (
-      <div className="mx-auto max-w-lg px-4 py-20 text-center">
-        <p className="mb-4 text-slate-400">Session not found or expired.</p>
-        <Link href="/interview" className="btn-primary">
+      <div className="page-body py-20 text-center">
+        <p className="mb-4 text-sm text-zinc-500">Session not found or expired.</p>
+        <Link href="/interview" className="btn-accent">
           Start new interview
         </Link>
       </div>
@@ -130,100 +130,107 @@ export default function InterviewSessionPage() {
   if (!current) {
     return (
       <div className="flex justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-indigo-400" />
+        <Loader2 className="h-6 w-6 animate-spin text-zinc-400" />
       </div>
     );
   }
 
+  const wordCount = answer.trim().split(/\s+/).filter(Boolean).length;
+
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
-      <div className="mb-6 flex items-center justify-between text-sm text-slate-400">
-        <span>
-          Question {index + 1} of {total}
-        </span>
-        <div className="flex items-center gap-2">
-          {timedMode && (
-            <span
-              className={`rounded-full px-3 py-1 font-mono text-xs font-bold ${
-                secondsLeft < 30
-                  ? "bg-red-500/20 text-red-400"
-                  : "bg-amber-500/20 text-amber-300"
-              }`}
-            >
-              {Math.floor(secondsLeft / 60)}:{String(secondsLeft % 60).padStart(2, "0")}
+    <div>
+      {/* Session top bar */}
+      <div className="border-b border-zinc-200 bg-white">
+        <div className="mx-auto max-w-3xl px-4 py-4 sm:px-6">
+          <div className="mb-3 flex items-center justify-between text-sm">
+            <span className="font-medium text-zinc-700">
+              Question {index + 1} of {total}
             </span>
-          )}
-          <span className="rounded-full bg-indigo-500/20 px-3 py-1 text-indigo-300">
-            {current.category}
-          </span>
+            <div className="flex items-center gap-2">
+              {timedMode && (
+                <span
+                  className={`badge font-mono tabular-nums ${
+                    secondsLeft < 30 ? "bg-red-50 text-red-700 ring-red-600/20" : "badge-warning"
+                  }`}
+                >
+                  {Math.floor(secondsLeft / 60)}:{String(secondsLeft % 60).padStart(2, "0")}
+                </span>
+              )}
+              <span className="badge badge-info">{current.category}</span>
+            </div>
+          </div>
+          <div className="h-1.5 overflow-hidden rounded-full bg-zinc-100">
+            <div
+              className="h-full rounded-full bg-teal-600 transition-all duration-300"
+              style={{ width: `${((index + 1) / total) * 100}%` }}
+            />
+          </div>
         </div>
       </div>
 
-      <div className="mb-2 h-2 overflow-hidden rounded-full bg-white/10">
-        <div
-          className="h-full rounded-full bg-indigo-500 transition-all"
-          style={{ width: `${((index + 1) / total) * 100}%` }}
-        />
-      </div>
-
-      <div className="glass mt-8 rounded-2xl p-6 sm:p-8">
-        <h2 className="mb-4 text-xl font-semibold leading-snug text-white sm:text-2xl">
-          {current.text}
-        </h2>
-        {current.hint && (
-          <p className="mb-6 text-sm text-slate-500">Tip: {current.hint}</p>
-        )}
-
-        <label className="label" htmlFor="answer">
-          Your answer
-        </label>
-        <textarea
-          id="answer"
-          rows={8}
-          className="input-field resize-y"
-          placeholder="Type your answer as you would speak in an interview…"
-          value={answer}
-          onChange={(e) => setAnswer(e.target.value)}
-        />
-        <p className="mt-2 text-xs text-slate-500">
-          {answer.trim().split(/\s+/).filter(Boolean).length} words · Aim for 150–250
-          words per question
-        </p>
-      </div>
-
-      <div className="mt-8 flex flex-wrap gap-3">
-        <button
-          type="button"
-          className="btn-secondary"
-          onClick={goPrev}
-          disabled={index === 0}
-        >
-          <ChevronLeft className="h-4 w-4" />
-          Previous
-        </button>
-
-        {!isLast ? (
-          <button type="button" className="btn-primary" onClick={goNext}>
-            Next
-            <ChevronRight className="h-4 w-4" />
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="btn-primary"
-            onClick={finishInterview}
-            disabled={submitting || answer.trim().length < 10}
-          >
-            {submitting ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Evaluating…
-              </>
-            ) : (
-              "Submit & get feedback"
+      <div className="page-body">
+        <div className="mx-auto max-w-3xl">
+          <div className="card p-6 sm:p-8">
+            <h2 className="mb-4 text-lg font-semibold leading-snug text-zinc-900 sm:text-xl">
+              {current.text}
+            </h2>
+            {current.hint && (
+              <p className="mb-6 rounded-md bg-zinc-50 px-3 py-2 text-xs text-zinc-500">
+                Tip: {current.hint}
+              </p>
             )}
-          </button>
-        )}
+
+            <label className="label" htmlFor="answer">
+              Your answer
+            </label>
+            <textarea
+              id="answer"
+              rows={8}
+              className="input-field resize-y"
+              placeholder="Type your answer as you would speak in an interview…"
+              value={answer}
+              onChange={(e) => setAnswer(e.target.value)}
+            />
+            <p className="mt-2 text-xs text-zinc-400">
+              {wordCount} words · Aim for 150–250 words per question
+            </p>
+          </div>
+
+          <div className="mt-6 flex flex-wrap gap-3">
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={goPrev}
+              disabled={index === 0}
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Previous
+            </button>
+
+            {!isLast ? (
+              <button type="button" className="btn-accent" onClick={goNext}>
+                Next
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="btn-accent"
+                onClick={finishInterview}
+                disabled={submitting || answer.trim().length < 10}
+              >
+                {submitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Evaluating…
+                  </>
+                ) : (
+                  "Submit & get feedback"
+                )}
+              </button>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
